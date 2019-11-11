@@ -1,0 +1,35 @@
+{
+  "name": "phasorviz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/javascript/phasorviz.js",
+  "homepage": "https://github.com/jeanpaulrichter/phasorviz",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c rollup.config.web.js && rollup -c rollup.config.app.js && node ./build.js",
+    "build-app": "rollup -c rollup.config.app.js && node ./build.js app",
+    "build-web": "rollup -c rollup.config.web.js && node ./build.js web"
+  },
+  "author": "jeanpaulrichter",
+  "license": "GPL-3.0+",
+  "repository": "github:jeanpaulrichter/phasorviz",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "bootstrap-colorpicker": "^3.1.2",
+    "file-saver": "^2.0.2",
+    "jquery": "^3.4.1",
+    "mathjs": "^6.2.3",
+    "popper.js": "^1.16.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "copyfiles": "^2.1.1",
+    "html-minifier": "^4.0.0",
+    "replace-in-file": "^4.2.0",
+    "rollup": "^1.26.3",
+    "rollup-plugin-babel-minify": "^9.1.0",
+    "rollup-plugin-delete": "^1.1.0",
+    "rollup-plugin-re": "^1.0.7",
+    "uglifycss": "0.0.29"
+  }
+}

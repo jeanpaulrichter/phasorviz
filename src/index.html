@@ -1,0 +1,718 @@
+<!--
+This file is part of PhasorViz
+(http://www.github.com/jeanpaulrichter/phasorviz)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+-->
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+  <!--@ICON_START-->
+  <link rel="apple-touch-icon" sizes="180x180" href="icon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16x16.png">
+  <link rel="manifest" href="icon/site.webmanifest">
+  <link rel="mask-icon" href="icon/safari-pinned-tab.svg" color="#3f88c5">
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="theme-color" content="#ffffff">
+  <!--@ICON_END-->
+  <!--@CSS_START-->
+  <link rel="stylesheet" href="../node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+  <link rel="stylesheet" href="css/thirdparty/bootstrap.min.css">
+  <link rel="stylesheet" href="css/thirdparty/jquery-ui.min.css">
+  <link rel="stylesheet" href="css/phasorviz.css">
+  <link rel="stylesheet" href="css/phasorviz_buttons.css">
+  <!--@CSS_END-->
+  <title>PhasorViz</title>
+</head>
+
+<body>
+  <!-- Dialog: save file -->
+  <div class="modal" id="dlgsave" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select" id="dlgsave_title">Save As</h5>
+          <button type="button" class="close" aria-label="Close" tabindex="-1">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-row dlg_row">
+              <div class="col-3 no_user_select my-auto">Filename:</div>
+              <div class="col">
+                <input type="text" class="form-control" value="1" id="dlgsave_name" />
+              </div>
+            </div>
+            <div class="form-row top-buffer-s dlg_row" id="dlgsave_row_size">
+              <div class="col-3 no_user_select my-auto">Size:</div>
+              <div class="col dlgsave_size">
+                <input type="text" class="form-control" id="dlgsave_width" value="1000" />
+                <span class="no_user_select">x</span>
+                <input type="text" class="form-control" id="dlgsave_height" value="1000" />
+              </div>
+            </div>
+            <div class="form-row top-buffer-s dlg_row" id="dlgsave_row_color">
+              <div class="col-3 no_user_select my-auto">Background:</div>
+              <div class="col">
+                <div id="dlgsave_color" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" aria-label="Save">Save</button>
+          <button type="button" class="btn btn-secondary" aria-label="Cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: delete phasor -->
+  <div class="modal" id="dlgdel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select">Warning</h5>
+          <button type="button" class="close" aria-label="Close" tabindex="-1">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body no_user_select">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" aria-label="Confirm">Confirm</button>
+          <button type="button" class="btn btn-secondary" aria-label="Cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: upload/download -->
+  <div class="modal" id="dlgnet" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select"></h5>
+          <button type="button" class="close" aria-label="Close" tabindex="-1">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3 dlgnet_form">
+            <input type="text" class="form-control" aria-label="phasorviz code" id="dlgnet_input" spellcheck="false">
+            <div class="input-group-append">
+              <button class="btn btn-secondary" type="button" id="dlgnet_btn"></button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" aria-label="Confirm">Confirm</button>
+          <button type="button" class="btn btn-secondary" aria-label="Cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: load file -->
+  <div class="modal" id="dlgload" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select">Load PhasorViz .JSON file</h5>
+          <button type="button" class="close" aria-label="Close" tabindex="-1">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <input type="file" class="form-control-file" id="dlgload_file">
+              <div id="dlgload_error"></div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" aria-label="Cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: edit phasor -->
+  <div class="modal" id="dlgedit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select">Edit Phasor</h5>
+          <button type="button" class="close" tabindex="-1" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col my-auto dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span> Color
+              </div>
+              <div class="col">
+                <div id="dlgedit_color" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col my-auto dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span>
+                Outline-Color
+              </div>
+              <div class="col">
+                <div id="dlgedit_color_ol" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span> Width
+              </div>
+              <div class="col">
+                <select class="form-control" id="dlgedit_width"></select>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span>
+                Outline-Width
+              </div>
+              <div class="col">
+                <select class="form-control" id="dlgedit_ol_width"></select>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span> Arrow
+              </div>
+              <div class="col">
+                <select class="form-control" id="dlgedit_arrow"></select>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span> Arrow
+                Size
+              </div>
+              <div class="col my-auto">
+                <input type="range" class="custom-range" id="dlgedit_arrowsize">
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="dlgedit_overlay"></div>
+              <div class="col dlgedit_label no_user_select">
+                <span class="oi oi-warning" title="attributes will be overwritten!" aria-hidden="true"></span> Skin
+              </div>
+              <div class="col">
+                <select class="form-control" id="dlgedit_skin"></select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" aria-label="save">Save</button>
+          <button type="button" class="btn btn-secondary" aria-label="cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: settings -->
+  <div class="modal" id="dlgsettings" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select">Settings</h5>
+          <button type="button" class="close" tabindex="-1" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-row dlg_row">
+              <div class="col-3 no_user_select">Display:</div>
+              <div class="col">
+                <select class="form-control" id="dlgs_quadrants">
+                  <option value="0">All Quadrants</option>
+                  <option value="1">Quadrant I</option>
+                  <option value="2">Quadrant II</option>
+                  <option value="3">Quadrant III</option>
+                  <option value="4">Quadrant IV</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="col-3">
+                <input type="checkbox" id="dlgs_compass">
+                <label class="form-check-label no_user_select" for="dlgs_compass">Compass: </label>
+              </div>
+              <div class="col-3">
+                <select class="form-control" id="dlgs_compass_style"></select>
+              </div>
+              <div class="col my-auto">
+                <div id="dlgs_compass_color" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="col-3">
+                <input type="checkbox" id="dlgs_grid">
+                <label class="form-check-label no_user_select" for="dlgs_grid">Grid: </label>
+              </div>
+              <div class="col-3">
+                <select class="form-control" id="dlgs_grid_style"></select>
+              </div>
+              <div class="col my-auto">
+                <div id="dlgs_grid_color" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="col-3">
+                <input type="checkbox" id="dlgs_axis">
+                <label class="form-check-label no_user_select" for="dlgs_axis">Axis: </label>
+              </div>
+              <div class="col-3">
+                <select class="form-control" id="dlgs_axis_style"></select>
+              </div>
+              <div class="col my-auto">
+                <div id="dlgs_axis_color" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-3"></div>
+              <div class="col">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="dlgs_axis_ticks">
+                  <label class="form-check-label no_user_select" for="dlgs_axis_ticks">Show Ticks</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row">
+              <div class="col-3 no_user_select">Labels:</div>
+              <div class="col">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="dlgs_labels_xp">
+                  <label class="form-check-label no_user_select" for="dlgs_labels_xp">x&#43;</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="dlgs_labels_xn">
+                  <label class="form-check-label no_user_select" for="dlgs_labels_xn">x&#45;</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="dlgs_labels_yp">
+                  <label class="form-check-label no_user_select" for="dlgs_labels_yp">y&#43;</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="dlgs_labels_yn">
+                  <label class="form-check-label no_user_select" for="dlgs_labels_yn">y&#45;</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="dlgs_labels_angles">
+                  <label class="form-check-label no_user_select" for="dlgs_labels_angles">angles</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_s">
+              <div class="col-3"></div>
+              <div class="col-6">
+                <div id="dlgs_labels_color" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_h">
+              <div class="col-3 no_user_select">Text Size:</div>
+              <div class="col">
+                <input type="range" class="custom-range" id="dlgs_labels_textsize">
+              </div>
+            </div>
+            <div class="form-row dlg_row_h">
+              <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="dlgs_legend">
+                  <label class="form-check-label no_user_select" for="dlgs_legend"> Legend: </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_s">
+              <div class="col-2 my-auto no_user_select">Text</div>
+              <div class="col-4 my-auto">
+                <div id="dlgs_legend_c_text" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-2 my-auto no_user_select">Border</div>
+              <div class="col-4 my-auto">
+                <div id="dlgs_legend_c_border" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_s">
+              <div class="col-2 my-auto no_user_select">Background</div>
+              <div class="col-4 my-auto">
+                <div id="dlgs_legend_c_bg" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_h">
+              <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="dlgs_compass_grad">
+                  <label class="form-check-label no_user_select" for="dlgs_compass_grad"> Add Compass Background Gradient: </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_s">
+              <div class="col-2 my-auto no_user_select">From </div>
+              <div class="col-4">
+                <div id="dlgs_compass_grad_from" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-2 my-auto no_user_select">To </div>
+              <div class="col-4">
+                <div id="dlgs_compass_grad_to" class="input-group">
+                  <input type="text" class="form-control input-lg" />
+                  <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_h">
+              <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="dlgs_custom_units">
+                  <label class="form-check-label no_user_select" for="dlgs_custom_units"> Use custom units: </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row dlg_row_s">
+              <div class="col-2 my-auto no_user_select">Major: </div>
+              <div class="col-4">
+                <input type="text" id="dlgs_cu_major" class="form-control" />
+              </div>
+              <div class="col-2 my-auto no_user_select">Minor: </div>
+              <div class="col-4">
+                <input type="text" id="dlgs_cu_minor" class="form-control input-lg" />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" aria-label="save">Save</button>
+          <button type="button" class="btn btn-secondary" aria-label="cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: info/about -->
+  <div class="modal" id="dlginfo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title no_user_select">Info</h5>
+          <button type="button" class="close" aria-label="Close" tabindex="-1">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-3">
+              <div class="list-group dlginfo_nav" id="dlginfo_tab" role="tablist">
+                <a class="list-group-item list-group-item-action active" href="#dlginfo_t1" role="tab"
+                  aria-controls="dlginfo_t1" aria-selected="true">Basic</a>
+                <a class="list-group-item list-group-item-action" href="#dlginfo_t2" role="tab"
+                  aria-controls="dlginfo_t2" aria-selected="false">Advanced</a>
+                <a class="list-group-item list-group-item-action" href="#dlginfo_t3" role="tab"
+                  aria-controls="dlginfo_t3" aria-selected="false">About</a>
+              </div>
+            </div>
+            <div class="col-9">
+              <div class="tab-content">
+                <div class="tab-pane fade show active dlginfo_tab" id="dlginfo_t1" role="tabpanel"
+                  aria-label="Basic Information">
+                  <p>Use the "Add" button to create new phasors, then enter an expression (i.e. "3 + 5*i") into the
+                    input box. The result will be interpreted as a complex number, which is then rendered. You can
+                    change the label used for the legend by doubleclicking on the corresponding field. Via the "Edit"
+                    button you can change attributes like color and width of the currently selected phasor. Please note
+                    that by holding the ctrl-key (or long tap) you can select more then one phasor.</p>
+                  <p>You can drag and drop phasors in the graphic itself and move or scale the legend. More rendering
+                    options can be found via the settings dialog ("Settings"-button).</p>
+                  <p>The "File" button let's you export the current graphic as .svg or .png file. You can also save the
+                    current setup as a .json file and load it again later.</p>
+                </div>
+                <div class="tab-pane fade dlginfo_tab" id="dlginfo_t2" role="tabpanel" aria-label="Advanced">
+                  <p>To the left of the "label"-field of every phasor the symbol-name is shown. Newly created phasors
+                    don't have a name yet. Doubleclick on the field to change that. Symbols must be unique and are only
+                    allowed to contain letters, digits and underscore ("_"). Other phasors can now use the symbol-name
+                    in their expressions (i.e. "-phasor_1 * 3 + i"). Please make sure not to create dependency loops.
+                  </p>
+                  <p>Via the field left of the expression-input of every phasor you can select another phasor as "parent".
+                    Just doubleclick and enter the symbol-name of said parent. Of course loops are not allowed.</p>
+                </div>
+                <div class="tab-pane fade dlginfo_tab" id="dlginfo_t3" role="tabpanel" aria-label="About">
+                  <p><b>PhaszorViz 1.0</b> by jeanpaulrichter</p>
+                  <p><a target="_blank"
+                      href="https://github.com/jeanpaulrichter/phasorviz">github.com/jeanpaulrichter/phasorviz</a></p>
+                  <p>uses
+                    <a href="https://jquery.com/" target="_blank">jquery</a>,
+                    <a href="https://github.com/jquery/jquery-mousewheel/" target="_blank">jquery-mousewheel</a>,
+                    <a href="https://jqueryui.com/" target="_blank">jquery-ui</a>,
+                    <a href="https://github.com/RWAP/jquery-ui-touch-punch" target="_blank">jquery-ui-touch-punch</a>,
+                    <a href="https://getbootstrap.com/" target="_blank">bootstrap</a>,
+                    <a href="https://github.com/thomaspark/bootswatch" target="_blank">bootswatch 'superhero'-theme</a>,
+                    <a href="https://github.com/farbelous/bootstrap-colorpicker"
+                      target="_blank">bootstrap-colorpicker</a>,
+                    <a href="https://popper.js.org/" target="_blank">popper.js</a>,
+                    <a href="https://github.com/eligrey/FileSaver.js/" target="_blank">FileSaver.js</a>
+                    and <a href="https://mathjs.org/" target="_blank">math.js</a></p>
+                  <p class="dlginfo_license">This program is free software: you can redistribute it and/or modify it
+                    under the terms of the GNU General Public License as published by the Free Software Foundation,
+                    either version 3 of the License, or (at your option) any later version. This program is distributed
+                    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+                    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+                    details.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" aria-label="ok">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- header -->
+    <div class="row justify-content-md-center">
+      <div class="col-lg-6">
+      </div>
+    </div>
+    <div class="row justify-content-md-center top-buffer-s">
+      <div class="col-lg-6">
+        <svg xmlns="http://www.w3.org/2000/svg" id="svg" viewBox="-500 -500 1000 1000">
+          <defs>
+            <filter id="svg_glow" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox"
+              primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">
+              <feMorphology operator="dilate" radius=".1" in="SourceAlpha" result="morphology"></feMorphology>
+              <feFlood flood-color="#8fb9fc" flood-opacity="0.8" result="flood"></feFlood>
+              <feComposite in="flood" in2="morphology" operator="in" result="composite"></feComposite>
+              <feMerge result="merge">
+                <feMergeNode in="morphology" result="mergeNode"></feMergeNode>
+                <feMergeNode in="SourceGraphic" result="mergeNode1"></feMergeNode>
+              </feMerge>
+            </filter>
+            <radialGradient id="svg_compassgrad" cx="50%" cy="50%" r="75%">
+              <stop offset="0%" stop-color="" stop-opacity="1"></stop>
+              <stop offset="100%" stop-color="" stop-opacity="1"></stop>
+            </radialGradient>
+            <style type="text/css">
+              @font-face {
+                font-family: 'Inconsolata';
+                src: url(data:application/font-woff2;charset=utf-8;base64,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) format('woff2');
+                font-weight: normal;
+                font-style: normal;
+              }
+
+              .noselect {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+              }
+
+              .unit {
+                font-family: Inconsolata, Consolas, Courier New;
+              }
+
+              .angle {
+                font-family: Inconsolata, Consolas, Courier New;
+              }
+
+              .legend {
+                font-family: Inconsolata, Consolas, Courier New;
+              }
+            </style>
+          </defs>
+          <text x="-100" y="0" font-size="32" font-family="Inconsolata" font-weight="normal"
+            font-style="normal">loading...</text>
+        </svg>
+      </div>
+    </div>
+    <div class="row justify-content-md-center top-buffer">
+      <div class="col-lg-6">
+        <form>
+          <template id="phasor_list_template">
+            <div class="form-row">
+              <div class="col-md">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text phasor_visible" data-ident="visible"><input type="checkbox"
+                        data-ident="visible" checked></div>
+                    <span class="input-group-text phasor_parent no_user_select" data-ident="parent"><span
+                        data-ident="parent"></span><input type="text" class="form-control hidden" /></span>
+                  </div>
+                  <input type="text" class="phasor_exp form-control" data-ident="exp" value="" spellcheck="false" />
+                  <div class="input-group-append">
+                    <span class="input-group-text phasor_system no_user_select" data-ident="system"><span
+                        data-ident="system">c</span></span>
+                    <span class="input-group-text phasor_symbol no_user_select" data-ident="symbol"><span
+                        data-ident="symbol"></span><input type="text" class="form-control hidden" /></span>
+                    <span class="input-group-text phasor_label no_user_select" data-ident="label"><span
+                        data-ident="label"></span><input type="text" class="form-control hidden" /></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+          <div class="form-row">
+            <div class="col-md">
+              <div class="input-group">
+                <span class="input-group-text" id="phasor_info"></span>
+              </div>
+            </div>
+          </div>
+          <div id="phasor_list" class="top-buffer">
+          </div>
+          <!--@BUTTONS_START-->
+          <div class="form-row">
+            <div class="col">
+              <div class="btn-toolbar" role="toolbar" id="buttons" aria-label="button toolbar">
+                <div class="btn-group mr-2 top-buffer-s" role="group" aria-label="phasor buttons">
+                  <button type="button" class="btn btn-secondary btn-icon icon-add" id="btn_add"
+                    aria-label="Add Phasor">Add</button>
+                  <button type="button" class="btn btn-secondary btn-icon icon-del" id="btn_del"
+                    aria-label="Delete Phasor">Delete</button>
+                  <button type="button" class="btn btn-secondary btn-icon icon-edit" id="btn_edit"
+                    aria-label="Edit Phasor">Edit</button>
+                </div>
+                <div class="btn-group mr-2 top-buffer-s" role="group" aria-label="other buttons">
+                  <button type="button" class="btn btn-secondary btn-icon icon-settings" id="btn_settings"
+                    aria-label="Settings">Settings</button>
+                  <button type="button" class="btn btn-secondary btn-icon-only icon-info" id="btn_info"
+                    aria-label="Info"></button>
+                  <div class="btn-group">
+                    <button type="button" id="btn_dropdown"
+                      class="btn btn-secondary dropdown-toggle btn-icon icon-save" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">File</button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <button class="dropdown-item dropdown-icon icon-png" type="button" id="btn_savepng"
+                        aria-label="Save as png">Save as .PNG</button>
+                      <button class="dropdown-item dropdown-icon icon-svg" type="button" id="btn_savesvg"
+                        aria-label="Save as svg">Save as .SVG</button>
+                      <button class="dropdown-item dropdown-icon icon-json" type="button" id="btn_savejson"
+                        aria-label="Save as json">Save as .JSON</button>
+                      <button class="dropdown-item dropdown-icon icon-json" type="button" id="btn_load"
+                        aria-label="Load json">Load .JSON</button>
+                      <button class="dropdown-item dropdown-icon icon-upload" type="button" id="btn_upload"
+                        aria-label="Load json">Upload</button>
+                      <button class="dropdown-item dropdown-icon icon-download" type="button" id="btn_download"
+                        aria-label="Load json">Download</button>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-icon-only icon-lock" id="btn_lock"
+                    aria-label="SVG Lock"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--@BUTTONS_END-->
+        </form>
+      </div>
+    </div>
+    <!-- footer -->
+    <div class="row justify-content-md-center top-buffer">
+      <div class="col-lg-6 footer">
+      </div>
+    </div>
+  </div>
+  <!--@JS_START-->
+  <script src="../node_modules/file-saver/dist/FileSaver.min.js"></script>
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="javascript/thirdparty/jquery-ui.min.js"></script>
+  <script src="javascript/thirdparty/jquery.ui.touch-punch.js"></script>
+  <script src="javascript/thirdparty/jquery.mousewheel.min.js"></script>
+  <script src="../node_modules/mathjs/dist/math.min.js"></script>
+  <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+  <script src="javascript/phasorviz.js" type="module"></script>
+  <!--@JS_END-->
+</body>
+
+</html>

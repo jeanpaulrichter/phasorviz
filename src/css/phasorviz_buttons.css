@@ -1,0 +1,31 @@
+/*
+This file is part of PhasorViz
+(http://www.github.com/jeanpaulrichter/phasorviz)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*/
+
+.btn-icon {	background-repeat: no-repeat; background-size: 1em, 1em; background-position: 17%, 50%; padding-left: 2em; }
+.btn-icon-only { background-repeat: no-repeat; background-size: 1em, 1em; background-position: 50%, 50%; width: 2.5em; }
+.dropdown-icon { background-repeat: no-repeat; background-size: 1em, 1em;	background-position: 16%, 50%; padding-left: 3em; }
+.icon-edit { background-image: url('icons/edit.svg'); }
+.icon-del { background-image: url('icons/del.svg'); }
+.icon-add { background-image: url('icons/add.svg'); }
+.icon-settings { background-image: url('icons/settings.svg'); }
+.icon-info { background-image: url('icons/info.svg'); }
+.icon-json { background-image: url('icons/json.svg'); }
+.icon-save { background-image: url('icons/save.svg'); }
+.icon-svg { background-image: url('icons/svg.svg'); }
+.icon-png { background-image: url('icons/png.svg'); }
+.icon-lock { background-image: url('icons/lock.svg'); }
+.icon-lock-open { background-image: url('icons/lock_open.svg'); }
+.icon-upload { background-image: url('icons/upload.svg'); }
+.icon-download { background-image: url('icons/download.svg'); }

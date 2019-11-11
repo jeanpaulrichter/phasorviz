@@ -1,0 +1,93 @@
+/*
+This file is part of PhasorViz
+(http://www.github.com/jeanpaulrichter/phasorviz)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*/
+
+:root {
+  --phasor_sel_color: #8fb9fc;
+  --svg_back_color: #ffffff;
+  --body_back_color: #fbfdff;
+  --main_dark_color: #4E5D6C;
+  --main_light_color: #EBEBEB;
+  --invalid_text_color: #ff0000;
+  --invalid_back_color: #ffadad;
+  --disabled_color: #979696;
+}
+html, body { height: 100%; }
+.footer { position: absolute; bottom: 0px; }
+body { background-color: var(--body_back_color); }
+#svg { background-color: var(--svg_back_color); border: 1px solid var(--main_light_color); }
+#phasor_info { width: 100%; font-size: 0.7rem; padding: 0.3rem !important; height: 1.5rem; }
+#dlgload_error { color: var(--invalid_text_color) !important; height: 2.1rem; padding: 0.25rem; background-color: var(--main_light_color); height: 2.1rem; margin-top: 0.5rem; }
+.top-buffer { margin-top: 4px; }
+.top-buffer-s { margin-top: 2px; }
+.no_user_select { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none;	-ms-user-select: none; user-select: none; }
+.invisible { visibility: hidden; }
+.hidden { display: none; }
+.invalid_input { background-color: var(--invalid_back_color); color: var(--invalid_text_color) !important; }
+.invalid_input:focus { color: var(--invalid_text_color) !important; }
+.disabled { color: var(--disabled_color); }
+.svg_legend { cursor: move; }
+.svg_legend_scale {	cursor: nwse-resize; }
+.dlginfo_nav { font-size: 0.8em; }
+.dlginfo_tab { font-size: 0.7em; height: 200px; overflow: auto;}
+.dlginfo_license { font-size: 0.86em; }
+.dlgnet_error { color: var(--invalid_text_color) !important; }
+.dlgnet_error:focus { color: var(--invalid_text_color) !important; }
+.dlgnet_form > input { width: 60%; }
+.dlgnet_form > div { width: 40%; }
+.dlgsave_size input { width: 8rem; float: left; }
+.dlgsave_size span { float:left; margin-left: 1rem; margin-right: 1rem; height: calc(1.5em + .75rem + 2px); display: inline-flex; align-items: center; }
+.dlgedit_overlay { background-color: var(--main_light_color); height: 110%; width: 101%; opacity: 0.5; top: -9%; left: -0.5%; position: absolute; padding: 0; z-index: 1; display: none; border: 1px solid rgb(99, 99, 99); }
+.dlg_row_h { margin-top: 0.5rem; }
+.dlg_row_h label { margin-left: 0.5rem; }
+.dlg_row { position: relative; height: 2.3rem; margin-top: 4px; }
+.dlg_row input { font-size: 0.8em; }
+.dlg_row input:disabled { background: var(--disabled_color) !important; }
+.dlg_row select { font-size: 0.8em; }
+.dlg_row select:disabled { background: var(--disabled_color) !important; }
+.dlg_row input[type='checkbox'] { margin-top: 0.5em; margin-bottom: 0.5em; }
+.dlg_row label { margin-left: 0.5em; }
+.dlg_row_s { position: relative; height: 2rem; font-size: 0.85rem; margin-top: 2px; }
+.dlg_row_s input { font-size: 0.9em; }
+.dlg_row_s input:disabled { background-color: var(--disabled_color) !important; }
+.phasor_h1 { margin-bottom: 1px; }
+.phasor_h1 > * { height: 1.3rem; font-size: 0.7rem; }
+.phasor_h2 { margin-bottom: 2px; }
+.phasor_h2 > * { height: 1.6rem; font-size: 0.8rem; }
+.phasor_h3 { margin-bottom: 3px; }
+.phasor_h3 > * { height: 2.0rem; font-size: 0.95rem; }
+.phasor_h4 { margin-bottom: 4px; }
+.phasor_h4 > * { height: 2.4rem; font-size: 1rem; }
+.phasor_style_1 { background-color: var(--main_dark_color); color: var(--main_light_color); }
+.phasor_style_2 { background-color: #567714 !important; color: black !important; }
+.phasor_style_3 { background-color: #D4916A !important; color: black !important; }
+.phasor_style_4 { background-color: #261758 !important; color: #ccc !important; }
+.phasor_selected { -webkit-box-shadow: 0px 0px 3px 3px var(--phasor_sel_color); -moz-box-shadow: 0px 0px 3px 3px var(--phasor_sel_color); box-shadow: 0px 0px 3px 3px var(--phasor_sel_color); background-color: var(--phasor_sel_color); }
+.phasor_system { width: 2.5rem; cursor: pointer; font-size: 1em; }
+.phasor_system span { width: 100%; }
+.phasor_label { width: 7rem; padding: 0.1rem; cursor: pointer; font-size: 1em; border-left:1px solid var(--main_light_color) !important; }
+.phasor_label span { overflow: hidden; width: 100%; font-size: 1em; }
+.phasor_label input { height: 95%; width:100%; outline: none; box-shadow:none !important; border:1px solid var(--main_light_color) !important; font-size: 0.85em; padding: 0.3em; }
+.phasor_symbol { width: 4rem; padding: 0.1rem; cursor: pointer; font-size: 1em; border-left:1px solid var(--main_light_color) !important; }
+.phasor_symbol span { overflow: hidden; width: 100%; }
+.phasor_symbol input { height: 95%; width:100%; outline: none; box-shadow:none !important; border:1px solid var(--main_light_color) !important; font-size: 0.75em; padding: 0.2em; }
+.phasor_parent { width: 4rem; padding: 0.1rem; cursor: pointer; font-size: 1em; border-left:1px solid var(--main_light_color) !important; }
+.phasor_parent_invalid { color: var(--invalid_text_color); font-weight: bold; }
+.phasor_parent span { overflow: hidden; width: 100%; }
+.phasor_parent input { height: 95%; width:100%; outline: none; box-shadow:none !important; border:1px solid var(--main_light_color) !important; font-size: 0.75em; padding: 0.2em; }
+.phasor_exp { outline: none; box-shadow:none !important; border:1px solid var(--main_light_color) !important; width: 100%; }
+.phasor_exp_invalid { text-decoration: underline wavy var(--invalid_text_color); color: var(--invalid_text_color) !important; }
+
+@media screen and (max-width:720px) { :root { font-size: 12px; } }
+@media screen and (max-width:450px) { :root { font-size: 10px; } }

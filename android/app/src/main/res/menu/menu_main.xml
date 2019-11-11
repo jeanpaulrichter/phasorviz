@@ -1,0 +1,87 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_add"
+        android:title="@string/menu_add"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_edit"
+        android:title="@string/menu_edit"
+        android:icon="@drawable/ic_edit_disabled"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_lock"
+        android:title="@string/menu_lock"
+        android:icon="@drawable/ic_locked"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_del"
+        android:title="@string/menu_del"
+        android:icon="@drawable/ic_delete_disabled"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_reset"
+        android:title="@string/menu_reset"
+        android:icon="@drawable/ic_reset"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_files"
+        android:title="@string/menu_files"
+        android:icon="@drawable/ic_files"
+        app:showAsAction="ifRoom"
+        >
+        <menu>
+            <item
+                android:id="@+id/action_savepng"
+                android:title="@string/menu_savepng"
+                android:icon="@drawable/ic_png"
+                />
+            <item
+                android:id="@+id/action_savesvg"
+                android:title="@string/menu_savesvg"
+                android:icon="@drawable/ic_svg"
+                />
+            <item
+                android:id="@+id/action_savejson"
+                android:title="@string/menu_savejson"
+                android:icon="@drawable/ic_json"
+                />
+            <item
+                android:id="@+id/action_loadjson"
+                android:title="@string/menu_loadjson"
+                android:icon="@drawable/ic_load"
+                />
+            <item
+                android:id="@+id/action_upload"
+                android:title="@string/menu_upload"
+                android:icon="@drawable/ic_upload"
+                />
+            <item
+                android:id="@+id/action_download"
+                android:title="@string/menu_download"
+                android:icon="@drawable/ic_download"
+                />
+        </menu>
+
+    </item>
+
+    <item android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_info"
+        android:title="@string/menu_about"
+        app:showAsAction="never"/>
+</menu>
