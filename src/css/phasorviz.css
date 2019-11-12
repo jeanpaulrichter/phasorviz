@@ -23,9 +23,9 @@ GNU General Public License for more details.
   --invalid_back_color: #ffadad;
   --disabled_color: #979696;
 }
-html, body { height: 100%; }
+#header { height: 1rem; }
 .footer { position: absolute; bottom: 0px; }
-body { background-color: var(--body_back_color); }
+body { background-color: var(--body_back_color); min-height: 100vh; width: 100vw;  }
 #svg { background-color: var(--svg_back_color); border: 1px solid var(--main_light_color); }
 #phasor_info { width: 100%; font-size: 0.7rem; padding: 0.3rem !important; height: 1.5rem; }
 #dlgload_error { color: var(--invalid_text_color) !important; height: 2.1rem; padding: 0.25rem; background-color: var(--main_light_color); height: 2.1rem; margin-top: 0.5rem; }
@@ -89,5 +89,50 @@ body { background-color: var(--body_back_color); }
 .phasor_exp { outline: none; box-shadow:none !important; border:1px solid var(--main_light_color) !important; width: 100%; }
 .phasor_exp_invalid { text-decoration: underline wavy var(--invalid_text_color); color: var(--invalid_text_color) !important; }
 
-@media screen and (max-width:720px) { :root { font-size: 12px; } }
-@media screen and (max-width:450px) { :root { font-size: 10px; } }
+/* laptops */
+@media (min-width: 1025px) and (max-width: 1280px)
+{
+  :root { font-size: 14px; }
+  #header { height: 10px; }
+}
+/* Ipad Pro Portrait */
+@media only screen and (min-width: 1024px) and (max-width: 1024px) and (max-height: 1366px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1.5)
+{
+    .col-lg-6 { position: relative; width: 100%; padding-right: 15px; padding-left: 15px; flex: 0 0 100%; max-width: 100%; }
+    #header { height: 10px; }
+    :root { font-size: 18px; }
+}
+/* Ipad Pro Landscape */
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (min-height: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1.5)
+{
+    .col-lg-6 { position: relative; width: 60%; flex: 0 0 60%; max-width: 60%; }
+    #header { height: 3px; }
+    :root { font-size: 16px; }
+}
+/* Tablets, Ipads (portrait) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  :root { font-size: 14px; }
+  #header { height: 10px; }
+}
+/* Tablets, Ipads (landscape) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  :root { font-size: 13px; }
+  #header { height: 2px; }
+  .col-lg-6 { position: relative; width: 60%; padding-right: 10px; padding-left: 10px; flex: 0 0 60%; max-width: 60%; }
+}
+@media (min-width: 481px) and (max-width: 767px) {
+  :root { font-size: 12px; }
+  #header { height: 2px; }
+  .col-lg-6 { padding-left: 50px; padding-right: 50px; }
+}
+/* normal smartphones (Portrait) */
+@media (min-width: 321px) and (max-width: 480px) {
+  :root { font-size: 10px; }
+  #header { height: 13px; }
+}
+/* small smartphones (Portrait) */
+@media (max-width: 320px) {
+  :root { font-size: 9px; }
+  #header { height: 2px; }
+  .col-lg-6 { padding-left: 5px; padding-right: 5px; }
+}
