@@ -21,4 +21,10 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
+    <style name="Phasorviz.Dialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorText</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

@@ -1,35 +1,34 @@
 package de.jeanpaulrichter.phasorviz;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -40,19 +39,20 @@ public class MainActivity extends AppCompatActivity
     private static final int READ_REQUEST_CODE = 42;
     private static final int WRITE_REQUEST_CODE = 43;
     private static final String TAG = "PhasorViz:Main";
+    private boolean webview_loaded = false;
     private boolean svg_locked = true;
+    private String downloadcode = null;
+    private static final Pattern codePattern = Pattern.compile("^[A-Z0-9]{6}$");
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         // if necessary request WRITE_EXTERNAL_STORAGE
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
         } else {
             // already got permission: create phasorviz folder in /Downloads
             File DownloadDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "phasorviz");
@@ -73,11 +73,57 @@ public class MainActivity extends AppCompatActivity
         mWebView = findViewById(R.id.webview);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        mJSIF = new JSInterface(this, mUIHandler );
+        mJSIF = new JSInterface(this, mUIHandler);
         mWebView.addJavascriptInterface(mJSIF, "APP");
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            public void onPageFinished(WebView view, String url) {
+                if(downloadcode != null) {
+                    mWebView.loadUrl("javascript:phasorviz.download('" + downloadcode + "')");
+                } else {
+                    mWebView.loadUrl("javascript:phasorviz.init()");
+                }
+                webview_loaded = true;
+            }
+        });
 
         // load html
         mWebView.loadUrl("file:///android_asset/www/index.html");
+
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
+        if(appLinkData != null) {
+            String code = appLinkData.getLastPathSegment();
+            if(code.length() == 6 && codePattern.matcher(code).matches()) {
+                downloadcode = code;
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(webview_loaded) {
+            String appLinkAction = intent.getAction();
+            Uri appLinkData = intent.getData();
+            if (appLinkData != null) {
+                final String code = appLinkData.getLastPathSegment();
+                if (code.length() == 6 && codePattern.matcher(code).matches()) {
+                    new AlertDialog.Builder(this, R.style.Phasorviz_Dialog)
+                            .setTitle("Warning")
+                            .setMessage("Discard current phasors?")
+                            .setIcon(R.drawable.ic_warning)
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    mWebView.loadUrl("javascript:phasorviz.download('" + code + "')");
+                                }
+                            })
+                            .show();
+                }
+            }
+        }
     }
 
     @Override
@@ -108,34 +154,44 @@ public class MainActivity extends AppCompatActivity
                 mWebView.loadUrl("javascript:phasorviz.add()");
                 return true;
             case R.id.action_edit:
-                mWebView.loadUrl("javascript:phasorviz.edit()");
+                mWebView.loadUrl("javascript:phasorviz.dlgEdit()");
                 return true;
             case R.id.action_del:
-                mWebView.loadUrl("javascript:phasorviz.del()");
+                mWebView.loadUrl("javascript:phasorviz.dlgDel()");
                 return true;
-            case R.id.action_reset:
-                mWebView.loadUrl("javascript:phasorviz.reset()");
+            case R.id.action_reset: {
+                new AlertDialog.Builder(this, R.style.Phasorviz_Dialog)
+                        .setTitle("Warning")
+                        .setMessage("Discard current phasors?")
+                        .setIcon(R.drawable.ic_warning)
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                mWebView.loadUrl("javascript:phasorviz.reset()");
+                            }})
+                        .show();
                 return true;
+            }
             case R.id.action_about:
-                mWebView.loadUrl("javascript:phasorviz.info()");
+                mWebView.loadUrl("javascript:phasorviz.dlgInfo()");
                 return true;
             case R.id.action_settings:
-                mWebView.loadUrl("javascript:phasorviz.settings()");
+                mWebView.loadUrl("javascript:phasorviz.dlgSettings()");
                 return true;
             case R.id.action_savepng:
-                mWebView.loadUrl("javascript:phasorviz.save('png')");
+                mWebView.loadUrl("javascript:phasorviz.dlgSave('png')");
                 return true;
             case R.id.action_savesvg:
-                mWebView.loadUrl("javascript:phasorviz.save('svg')");
+                mWebView.loadUrl("javascript:phasorviz.dlgSave('svg')");
                 return true;
             case R.id.action_savejson:
-                mWebView.loadUrl("javascript:phasorviz.save('json')");
+                mWebView.loadUrl("javascript:phasorviz.dlgSave('json')");
                 return true;
             case R.id.action_upload:
-                mWebView.loadUrl("javascript:phasorviz.upload()");
+                mWebView.loadUrl("javascript:phasorviz.dlgUpload()");
                 return true;
             case R.id.action_download:
-                mWebView.loadUrl("javascript:phasorviz.download()");
+                mWebView.loadUrl("javascript:phasorviz.dlgDownload()");
                 return true;
             case R.id.action_loadjson:
                 // start filemanager to choose json file

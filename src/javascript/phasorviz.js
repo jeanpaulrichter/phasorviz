@@ -20,7 +20,8 @@ import { phasors } from './phasors.js';
 import { svg } from './svg.js';
 import { dialogs } from './dialogs.js';
 import { files } from './files.js';
-import { settings } from './settings.js';
+import { Settings, settings } from './settings.js';
+import { help } from './help.js';
 
 function PhasorViz()
 {
@@ -976,6 +977,44 @@ function PhasorViz()
         dialogs.show( dialogs.en.net, 'download' );
     }
 
+    function exportDownloadCode( code )
+    {
+        if( code.match( constants.code_regex ) ) {
+            $.ajax({
+                url: constants.ajax_url,
+                method: "POST",
+                data: { 'action' : 'get', 'code' : code },
+                dataType: "html",
+                timeout: 2000
+            }).done(function( msg ) {
+                try {
+                    let o = JSON.parse(msg);
+                    if( o.success ) {
+                        if( Settings.check( o.data.settings ) && phasors.load( o.data.phasors )) {
+                            settings.load( o.data.settings );
+                            updateSVG( true, true );
+                        } else {
+                            APP.showToast( 'Invalid data' );
+                            exportInit();
+                        }
+                    } else {
+                        APP.showToast( 'Invalid Code' );
+                        exportInit();
+                    }
+                } catch(exc) {
+                    APP.showToast( 'Invalid data' );
+                    exportInit();
+                }
+            }).fail(function() {
+                APP.showToast( 'Download failed' );
+                exportInit();
+            });
+        } else {
+            APP.showToast( 'Invalid Code' );
+            exportInit();
+        }
+    }
+
     function exportInfo()
     {
         dialogs.show( dialogs.en.info );
@@ -1003,6 +1042,14 @@ function PhasorViz()
         phasors.reset();
         settings.reset();
         updateSVG( true, true );
+    }
+
+    function exportInit()
+    {
+        if( !phasors.count() ) {
+            phasors.add(1, 1);
+            updateSVG( false, false );
+        }
     }
     // #endif
 
@@ -1055,23 +1102,66 @@ function PhasorViz()
 
         // #if WEB
         window.phasorviz = {
-            'edit' : exportEdit,
-            'settings' : exportSettings,
-            'info' : exportInfo,
-            'del' : exportDel,
-            'save' : exportSave,
+            'dlgEdit' : exportEdit,
+            'dlgSettings' : exportSettings,
+            'dlgInfo' : exportInfo,
+            'dlgDel' : exportDel,
+            'dlgSave' : exportSave,
             'load' : exportLoad,
             'add' : exportAdd,
             'reset' : exportReset,
             'setlocked' : exportSetLocked,
-            'upload' : exportUpload,
-            'download' : exportDownload
+            'dlgUpload' : exportUpload,
+            'dlgDownload' : exportDownload,
+            'download' : exportDownloadCode,
+            'init' : exportInit
         };
         // #endif
 
-		dialogs.setup( updateSVG );
-        phasors.add(1, 1);
-        updateSVG( false, false );
+        dialogs.setup( updateSVG );
+
+        // #if APP
+        let code = null;
+        if( location.pathname.substr(0,3) == '/c/' ) {
+            code = location.pathname.substr(3);
+        } else {
+            code = help.getParameter('code');
+        }
+        if( !code || !code.match( constants.code_regex ) ) {
+            phasors.add(1, 1);
+            updateSVG();
+        } else {
+            $.ajax({
+                url: constants.ajax_url,
+                method: "POST",
+                data: { 'action' : 'get', 'code' : code },
+                dataType: "html",
+                timeout: 2000
+            }).done(function( msg ) {
+                try {
+                    let o = JSON.parse(msg);
+                    if( o.success ) {
+                        if( Settings.check( o.data.settings ) && phasors.load( o.data.phasors )) {
+                            settings.load( o.data.settings );
+                            updateSVG();
+                        } else {
+                            phasors.add(1, 1);
+                            updateSVG();
+                        }
+                    } else {
+                        phasors.add(1, 1);
+                        updateSVG();
+                    }
+                } catch(exc) {
+                    phasors.add(1, 1);
+                    updateSVG();
+                }
+            }).fail(function() {
+                phasors.add(1, 1);
+                updateSVG();
+            });
+        }
+        // #endif
     }
 }
 

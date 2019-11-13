@@ -220,6 +220,9 @@ var svg = (function ()
         } else if( window.matchMedia('(max-width: 700px)').matches ) {
             system.phasor_circle_radius = constants.viewbox_base * 0.09;
             system.legend_circle_factor = 1;
+        } else if( window.matchMedia('(max-width: 1366px)').matches ) {
+            system.phasor_circle_radius = constants.viewbox_base * 0.07;
+            system.legend_circle_factor = 1;
         } else {
             system.phasor_circle_radius = constants.viewbox_base * 0.04;
             system.legend_circle_factor = 0.5;

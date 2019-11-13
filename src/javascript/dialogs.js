@@ -596,15 +596,16 @@ var dialogs = (function ()
 
     // -----------------------------------------------------------------------------------------------------------------------------
 
-    function _dlgNetBtn()
+    function _dlgNetBtn( e )
     {
         let el = $( '#dlgnet' );
-        var el_input = el.find( '#dlgnet_input' );
         if( el.data( 'what' ) == 'upload' ) {
+            let el_input = el.find( '#dlgnet_input' + ((e.target.id === 'dlgnet_btn1') ? '1' : '2') );
+            el_input.focus();
             el_input.select();
             document.execCommand("copy");
-            el_input.focus();
         } else {
+            let el_input = el.find( '#dlgnet_input1' );
             if( navigator && navigator.permissions ) {
                 navigator.permissions.query({name: "clipboard-read"}).then(result => {
                     if (result.state == "granted" || result.state == "prompt") {
@@ -621,29 +622,35 @@ var dialogs = (function ()
     {
         let el = $( '#dlgnet' );
         let el_btns = el.find( 'button' );
-        let el_input = el.find( '#dlgnet_input' );
+        let el_input1 = el.find( '#dlgnet_input1' );
+        let el_input2 = el.find( '#dlgnet_input2' );
         el.data( 'what', s );
         // wierd swaps of button classes seem for some reason be neccessary in order not to break bootstrap model...
         if( s === 'upload' ) {
             el.find( '.modal-title' ).html( 'Upload' );
             el_btns.eq(1).html( 'Copy to clipboard' ).addClass( 'hidden' );
-            el_btns.eq(2).addClass( 'hidden' );
-            el_btns.eq(3).html( 'OK' ).removeClass( 'btn-secondary' ).addClass( 'btn-primary' );
-            el_input.val( 'please wait...' ).removeClass( 'dlgnet_error invalid_input' ).prop( 'readonly', true ).data( 'val', 0 );
+            el_btns.eq(2).html( 'Copy to clipboard' ).addClass( 'hidden' );
+            el_btns.eq(3).addClass( 'hidden' );
+            el_btns.eq(4).html( 'OK' ).removeClass( 'btn-secondary' ).addClass( 'btn-primary' );
+            el_input1.val( 'please wait...' ).removeClass( 'dlgnet_error invalid_input' ).prop( 'readonly', true ).data( 'val', 0 );
+            el_input2.addClass( 'hidden' );
         } else {
             el.find( '.modal-title' ).html( 'Please enter download code' );
             el_btns.eq(1).html( 'Copy from clipboard' ).removeClass( 'hidden' );
-            el_btns.eq(2).removeClass( 'hidden' ).html( 'Confirm' );
-            el_btns.eq(3).html( 'Cancel' ).removeClass( 'btn-primary' ).addClass( 'btn-secondary' );
-            el_input.val( '' ).removeClass( 'dlgnet_error invalid_input' ).prop( 'readonly', false ).prop( 'maxlength', 6 ).data( 'val', 1 );
+            el_btns.eq(2).addClass( 'hidden' );
+            el_btns.eq(3).removeClass( 'hidden' ).html( 'Confirm' );
+            el_btns.eq(4).html( 'Cancel' ).removeClass( 'btn-primary' ).addClass( 'btn-secondary' );
+            el_input1.val( '' ).removeClass( 'dlgnet_error invalid_input' ).prop( 'readonly', false ).prop( 'maxlength', 6 ).data( 'val', 1 );
+            el_input2.addClass( 'hidden' );
         }
     }
 
     function _dlgNetReady()
     {
         var el = $( '#dlgnet' );
-        var el_input = el.find( '#dlgnet_input' );
-        var el_btn = el.find( '#dlgnet_btn' );
+        var el_input1 = el.find( '#dlgnet_input1' );
+        var el_input2 = el.find( '#dlgnet_input2' );
+        var el_btn = el.find( '#dlgnet_btn1, #dlgnet_btn2' );
         var el_title = el.find( '.modal-title' );
         if( el.data( 'what' ) == 'upload' ) {
             var data = '{ "settings" : ' + JSON.stringify(settings) + ', "phasors" : ' + phasors.stringify() + '}';
@@ -670,17 +677,18 @@ var dialogs = (function ()
                     if( o.success ) {
                         el_title.html( 'Upload successful!' );
                         el_btn.removeClass( 'hidden' );
-                        el_input.val( o.code );
-                        el_input.focus();
-                        el_input[0].setSelectionRange(0,6);
+                        el_input2.val( constants.baseurl + '/c/' + o.code ).removeClass( 'hidden' );
+                        el_input1.val( o.code );
+                        el_input1.focus();
+                        el_input1[0].setSelectionRange(0,6);
                     } else {
-                        el_input.addClass( 'dlgnet_error' ).val( o.msg );
+                        el_input1.addClass( 'dlgnet_error' ).val( o.msg );
                     }
                 } catch(exc) {
-                    el_input.addClass( 'dlgnet_error' ).val( 'an error occured' );
+                    el_input1.addClass( 'dlgnet_error' ).val( 'an error occured' );
                 }
             }).fail(function() {
-                el_input.addClass( 'dlgnet_error' ).val( 'upload failed' );
+                el_input1.addClass( 'dlgnet_error' ).val( 'upload failed' );
             });
         } else {
             if( navigator.clipboard && navigator.permissions ) {
@@ -692,14 +700,14 @@ var dialogs = (function ()
             } else {
                 el_btn.addClass( 'hidden' );
             }
-            el_input[0].focus();
+            el_input1[0].focus();
         }
     }
 
     function _dlgNetDownload()
     {
         var el = $( '#dlgnet' );
-        var el_input = el.find( '#dlgnet_input' );
+        var el_input = el.find( '#dlgnet_input1' );
         var code = el_input.val();
         if( code.match( constants.code_regex ) ) {
             $.ajax({
@@ -755,8 +763,10 @@ var dialogs = (function ()
 
     function _dlgNetInputFocus( e )
     {
-        if( $(e.target).data( 'val' ) == 1 ) {
+        let el = $( e.target );
+        if( el.data( 'val' ) == 1 ) {
             e.target.value='';
+            el.removeClass( 'invalid_input dlgnet_error');
         }
     }
 
@@ -946,9 +956,10 @@ var dialogs = (function ()
         dlg_buttons = dlg.find( 'button' );
         dlg_buttons.eq( 0 ).on( 'click', _onDlgHide );
         dlg_buttons.eq( 1 ).on( 'click', _dlgNetBtn );
-        dlg_buttons.eq( 2 ).on( 'click', _onDlgAction );
-        dlg_buttons.eq( 3 ).on( 'click', _onDlgHide );
-        dlg.find( '#dlgnet_input' ).on( 'input', _dlgNetInputChange ).on( 'focus', _dlgNetInputFocus );
+        dlg_buttons.eq( 2 ).on( 'click', _dlgNetBtn );
+        dlg_buttons.eq( 3 ).on( 'click', _onDlgAction );
+        dlg_buttons.eq( 4 ).on( 'click', _onDlgHide );
+        dlg.find( '#dlgnet_input1' ).on( 'input', _dlgNetInputChange ).on( 'focus', _dlgNetInputFocus );
 
         // dlgSave
         dlg = $( '#dlgsave' );

@@ -25,6 +25,8 @@ const constants = {
     // indicates if phasorviz is running as app
     'appmode' : false,
 
+    'baseurl' : 'https://phasorviz.cerberus-design.de',
+
     'svg' : {
         'ns' : 'http://www.w3.org/2000/svg',
         'publicid' : '-//W3C//DTD SVG 1.1//EN',

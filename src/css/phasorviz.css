@@ -52,6 +52,7 @@ body { background-color: var(--body_back_color); min-height: 100vh; width: 100vw
 .dlg_row_h { margin-top: 0.5rem; }
 .dlg_row_h label { margin-left: 0.5rem; }
 .dlg_row { position: relative; height: 2.3rem; margin-top: 4px; }
+.dlg_row button { font-size: 0.8em; }
 .dlg_row input { font-size: 0.8em; }
 .dlg_row input:disabled { background: var(--disabled_color) !important; }
 .dlg_row select { font-size: 0.8em; }
@@ -120,7 +121,7 @@ body { background-color: var(--body_back_color); min-height: 100vh; width: 100vw
   #header { height: 2px; }
   .col-lg-6 { position: relative; width: 60%; padding-right: 10px; padding-left: 10px; flex: 0 0 60%; max-width: 60%; }
 }
-@media (min-width: 481px) and (max-width: 767px) {
+@media (min-width: 481px) and (max-width: 812px) {
   :root { font-size: 12px; }
   #header { height: 2px; }
   .col-lg-6 { padding-left: 50px; padding-right: 50px; }

@@ -96,6 +96,11 @@ function uglifyWebHtml()
 
         replace.sync({
             files: 'web/index.html',
+            from: /<!--@BASEURL-->/g,
+            to: '<base href="https://phasorviz.cerberus-design.de/">'
+        });
+        replace.sync({
+            files: 'web/index.html',
             from: /<!--@CSS_START-->[\s\S]*<!--@CSS_END-->/g,
             to: cssString,
         });

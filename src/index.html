@@ -19,6 +19,7 @@ GNU General Public License for more details.
   <meta charset="utf-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+  <!--@BASEURL-->
   <!--@ICON_START-->
   <link rel="apple-touch-icon" sizes="180x180" href="icon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png">
@@ -117,12 +118,28 @@ GNU General Public License for more details.
           </button>
         </div>
         <div class="modal-body">
-          <div class="input-group mb-3 dlgnet_form">
-            <input type="text" class="form-control" aria-label="phasorviz code" id="dlgnet_input" spellcheck="false">
-            <div class="input-group-append">
-              <button class="btn btn-secondary" type="button" id="dlgnet_btn"></button>
+          <form>
+            <div class="form-row dlg_row">
+              <div class="col my-auto">
+                <div class="input-group mb-3 dlgnet_form">
+                    <input type="text" class="form-control" aria-label="phasorviz code" id="dlgnet_input1" spellcheck="false">
+                    <div class="input-group-append">
+                      <button class="btn btn-secondary" type="button" id="dlgnet_btn1"></button>
+                    </div>
+                  </div>
+              </div>
             </div>
-          </div>
+            <div class="form-row dlg_row">
+                <div class="col my-auto">
+                  <div class="input-group mb-3 dlgnet_form">
+                      <input type="text" class="form-control" aria-label="phasorviz code" id="dlgnet_input2" spellcheck="false">
+                      <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button" id="dlgnet_btn2"></button>
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" aria-label="Confirm">Confirm</button>
@@ -555,7 +572,7 @@ GNU General Public License for more details.
     </div>
   </div>
 
-  <div class="container-fluid">
+  <div class="container">
     <!-- header -->
     <div class="row justify-content-md-center" id="header">
       <div class="col-lg-6">
