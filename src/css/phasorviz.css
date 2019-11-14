@@ -42,10 +42,10 @@ body { background-color: var(--body_back_color); min-height: 100vh; width: 100vw
 .dlginfo_nav { font-size: 0.8em; }
 .dlginfo_tab { font-size: 0.7em; height: 200px; overflow: auto;}
 .dlginfo_license { font-size: 0.86em; }
-.dlgnet_error { color: var(--invalid_text_color) !important; }
-.dlgnet_error:focus { color: var(--invalid_text_color) !important; }
-.dlgnet_form > input { width: 60%; }
-.dlgnet_form > div { width: 40%; }
+.dlgupload_error { color: var(--invalid_text_color) !important; }
+.dlgupload_error:focus { color: var(--invalid_text_color) !important; }
+.dlgupload_input_group > input { width: 65%; }
+.dlgupload_input_group > div { width: 35%; }
 .dlgsave_size input { width: 8rem; float: left; }
 .dlgsave_size span { float:left; margin-left: 1rem; margin-right: 1rem; height: calc(1.5em + .75rem + 2px); display: inline-flex; align-items: center; }
 .dlgedit_overlay { background-color: var(--main_light_color); height: 110%; width: 101%; opacity: 0.5; top: -9%; left: -0.5%; position: absolute; padding: 0; z-index: 1; display: none; border: 1px solid rgb(99, 99, 99); }

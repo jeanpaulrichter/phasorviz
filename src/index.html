@@ -107,8 +107,8 @@ GNU General Public License for more details.
     </div>
   </div>
 
-  <!-- Dialog: upload/download -->
-  <div class="modal" id="dlgnet" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Dialog: Upload -->
+  <div class="modal" id="dlgupload" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -121,29 +121,18 @@ GNU General Public License for more details.
           <form>
             <div class="form-row dlg_row">
               <div class="col my-auto">
-                <div class="input-group mb-3 dlgnet_form">
-                    <input type="text" class="form-control" aria-label="phasorviz code" id="dlgnet_input1" spellcheck="false">
+                <div class="input-group mb-3 dlgupload_input_group">
+                    <input type="text" class="form-control" aria-label="phasorviz link" id="dlgupload_input" spellcheck="false" readonly>
                     <div class="input-group-append">
-                      <button class="btn btn-secondary" type="button" id="dlgnet_btn1"></button>
+                      <button class="btn btn-secondary" type="button" id="dlgupload_btn">Copy to clipboard</button>
                     </div>
                   </div>
               </div>
             </div>
-            <div class="form-row dlg_row">
-                <div class="col my-auto">
-                  <div class="input-group mb-3 dlgnet_form">
-                      <input type="text" class="form-control" aria-label="phasorviz code" id="dlgnet_input2" spellcheck="false">
-                      <div class="input-group-append">
-                        <button class="btn btn-secondary" type="button" id="dlgnet_btn2"></button>
-                      </div>
-                    </div>
-                </div>
-              </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" aria-label="Confirm">Confirm</button>
-          <button type="button" class="btn btn-secondary" aria-label="Cancel">Cancel</button>
+          <button type="button" class="btn btn-primary" aria-label="Confirm">OK</button>
         </div>
       </div>
     </div>
@@ -694,12 +683,10 @@ GNU General Public License for more details.
                         aria-label="Save as svg">Save as .SVG</button>
                       <button class="dropdown-item dropdown-icon icon-json" type="button" id="btn_savejson"
                         aria-label="Save as json">Save as .JSON</button>
-                      <button class="dropdown-item dropdown-icon icon-json" type="button" id="btn_load"
-                        aria-label="Load json">Load .JSON</button>
                       <button class="dropdown-item dropdown-icon icon-upload" type="button" id="btn_upload"
                         aria-label="Load json">Upload</button>
-                      <button class="dropdown-item dropdown-icon icon-download" type="button" id="btn_download"
-                        aria-label="Load json">Download</button>
+                      <button class="dropdown-item dropdown-icon icon-json" type="button" id="btn_load"
+                        aria-label="Load json">Load .JSON</button>
                     </div>
                   </div>
                   <button type="button" class="btn btn-secondary btn-icon-only icon-lock" id="btn_lock"

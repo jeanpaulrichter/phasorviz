@@ -190,9 +190,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_upload:
                 mWebView.loadUrl("javascript:phasorviz.dlgUpload()");
                 return true;
-            case R.id.action_download:
-                mWebView.loadUrl("javascript:phasorviz.dlgDownload()");
-                return true;
             case R.id.action_loadjson:
                 // start filemanager to choose json file
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

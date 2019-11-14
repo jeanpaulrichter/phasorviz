@@ -863,10 +863,7 @@ function PhasorViz()
                 dialogs.show( dialogs.en.load );
                 break;
             case 'btn_upload':
-                dialogs.show( dialogs.en.net, 'upload' );
-                break;
-            case 'btn_download':
-                dialogs.show( dialogs.en.net, 'download' );
+                dialogs.show( dialogs.en.upload );
                 break;
             case 'btn_lock':
             {
@@ -952,32 +949,27 @@ function PhasorViz()
         updateSVG( true, true );
     }
 
-    function exportEdit()
+    function exportDlgEdit()
     {
         dialogs.show( dialogs.en.edit );
     }
 
-    function exportSettings()
+    function exportDlgSettings()
     {
         dialogs.show( dialogs.en.settings );
     }
 
-    function exportDel()
+    function exportDlgDel()
     {
         dialogs.show( dialogs.en.delete );
     }
 
-    function exportUpload()
+    function exportDlgUpload()
     {
-        dialogs.show( dialogs.en.net, 'upload' );
+        dialogs.show( dialogs.en.upload );
     }
 
-    function exportDownload()
-    {
-        dialogs.show( dialogs.en.net, 'download' );
-    }
-
-    function exportDownloadCode( code )
+    function exportDownload( code )
     {
         if( code.match( constants.code_regex ) ) {
             $.ajax({
@@ -1015,12 +1007,12 @@ function PhasorViz()
         }
     }
 
-    function exportInfo()
+    function exportDlgInfo()
     {
         dialogs.show( dialogs.en.info );
     }
 
-    function exportSave( ft )
+    function exportDlgSave( ft )
     {
         dialogs.show( dialogs.en.save, ft );
     }
@@ -1102,18 +1094,17 @@ function PhasorViz()
 
         // #if WEB
         window.phasorviz = {
-            'dlgEdit' : exportEdit,
-            'dlgSettings' : exportSettings,
-            'dlgInfo' : exportInfo,
-            'dlgDel' : exportDel,
-            'dlgSave' : exportSave,
+            'dlgEdit' : exportDlgEdit,
+            'dlgSettings' : exportDlgSettings,
+            'dlgInfo' : exportDlgInfo,
+            'dlgDel' : exportDlgDel,
+            'dlgSave' : exportDlgSave,
+            'dlgUpload' : exportDlgUpload,
             'load' : exportLoad,
             'add' : exportAdd,
             'reset' : exportReset,
             'setlocked' : exportSetLocked,
-            'dlgUpload' : exportUpload,
-            'dlgDownload' : exportDownload,
-            'download' : exportDownloadCode,
+            'download' : exportDownload,
             'init' : exportInit
         };
         // #endif
@@ -1123,7 +1114,7 @@ function PhasorViz()
         // #if APP
         let code = null;
         if( location.pathname.substr(0,3) == '/c/' ) {
-            code = location.pathname.substr(3);
+            code = location.pathname.substr(3, 6);
         } else {
             code = help.getParameter('code');
         }
@@ -1137,7 +1128,7 @@ function PhasorViz()
                 data: { 'action' : 'get', 'code' : code },
                 dataType: "html",
                 timeout: 2000
-            }).done(function( msg ) {
+            }).done( msg => {
                 try {
                     let o = JSON.parse(msg);
                     if( o.success ) {
@@ -1156,7 +1147,7 @@ function PhasorViz()
                     phasors.add(1, 1);
                     updateSVG();
                 }
-            }).fail(function() {
+            }).fail(() => {
                 phasors.add(1, 1);
                 updateSVG();
             });

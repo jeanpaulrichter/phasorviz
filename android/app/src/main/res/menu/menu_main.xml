@@ -56,19 +56,14 @@
                 android:icon="@drawable/ic_json"
                 />
             <item
-                android:id="@+id/action_loadjson"
-                android:title="@string/menu_loadjson"
-                android:icon="@drawable/ic_load"
-                />
-            <item
                 android:id="@+id/action_upload"
                 android:title="@string/menu_upload"
                 android:icon="@drawable/ic_upload"
                 />
             <item
-                android:id="@+id/action_download"
-                android:title="@string/menu_download"
-                android:icon="@drawable/ic_download"
+                android:id="@+id/action_loadjson"
+                android:title="@string/menu_loadjson"
+                android:icon="@drawable/ic_load"
                 />
         </menu>
 
