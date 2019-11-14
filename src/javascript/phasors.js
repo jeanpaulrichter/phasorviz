@@ -523,7 +523,7 @@ var phasors = (function ()
 				if(i > 0) {
 					ret += ',';
 				}
-				ret += '{ "id" : ' + p.id + ', "parent" : ' + (p.parent ? p.parent.id : -1) + ',  "value" : ' + expression + ', "width" : ' + p.width + ', "skin" : ' + p.skin + ', "arrow" : ' + p.arrow + ', "arrow_size" : ' + p.arrow_size + ', "visible" : ' + p.visible + ', "label" : ' + JSON.stringify(p.label) + ', "color_index" : ' + p.color_index + ', "outline_width" : ' + p.outline_width + ', "outline_color" : ' + JSON.stringify(p.outline_color) + ', "symbol" : ' + JSON.stringify(p.symbol) + '}';
+				ret += '{ "id" : ' + p.id + ', "parent" : ' + (p.parent ? p.parent.id : -1) + ',  "value" : ' + expression + ', "width" : ' + p.width + ', "skin" : ' + p.skin + ', "arrow" : ' + p.arrow + ', "arrow_size" : ' + p.arrow_size + ', "visible" : ' + p.visible + ', "label" : ' + JSON.stringify(p.label) + ', "color_index" : ' + p.color_index + ', "color": "' + p.color.rgba + '", "outline_width" : ' + p.outline_width + ', "outline_color" : "' + p.outline_color.rgba + '", "symbol" : ' + JSON.stringify(p.symbol) + '}';
                 i++;
             }
 		});
@@ -559,7 +559,11 @@ var phasors = (function ()
                     throw new Error('invalid parent');
                 }
                 list.push( new Phasor( array[i].id, 1, 1, array[i].color_index, array[i].label ) );
-
+                if( array[i].color_index == -1 ) {
+                    if( !list[i].color.set( array[i].color ) ) {
+                        throw new Error( 'invalid color' );
+                    }
+                }
                 list[i].width = array[i].width;
                 list[i].arrow = array[i].arrow;
                 list[i].arrow_size = array[i].arrow_size;
