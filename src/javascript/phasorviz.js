@@ -102,8 +102,8 @@ function PhasorViz()
                 'timer' : null,             // created on touchstart to process longtaps
                 'done': false,              // indicates if current touch was processed and can be ignored by touchend
                 'id' : 0,                   // phasor id
-				'last' : 0,		 			// last touchend in millisec
-				'target' : -1				// UI.phasor.xxx
+                'last' : 0,		 			// last touchend in millisec
+                'target' : -1				// UI.phasor.xxx
             }
         },
         'locked' : true,
@@ -169,7 +169,7 @@ function PhasorViz()
     function directPhasorEditStart( id, target )
     {
         if( !ui.list.direct_edit.active ) {
-			let p = phasors.getSelected();
+            let p = phasors.getSelected();
             if( p ) {
                 ui.list.direct_edit.active = true;
                 ui.list.direct_edit.target = target;
@@ -275,9 +275,9 @@ function PhasorViz()
         if( (ui.svg.action != UI.svg_action.none && ui.svg.action != UI.svg_action.pan) ) {
             return;
         }
-		if( ui.list.direct_edit.active ) {
-			directPhasorEditEnd( false );
-		}
+        if( ui.list.direct_edit.active ) {
+            directPhasorEditEnd( false );
+        }
 
         e.stopPropagation();
         e.preventDefault();
@@ -306,12 +306,12 @@ function PhasorViz()
 
         if( Date.now() - ui.svg.main.clicktime < 200 ) {
             // reset SVG transformation
-			if( !ui.locked && ui.svg.main.group ) {
-				ui.svg.main.group.transform.baseVal[0].matrix.a = 1;
-				ui.svg.main.group.transform.baseVal[0].matrix.d = 1;
-				ui.svg.main.group.transform.baseVal[0].matrix.e = 0;
-				ui.svg.main.group.transform.baseVal[0].matrix.f = 0;
-			}
+            if( !ui.locked && ui.svg.main.group ) {
+                ui.svg.main.group.transform.baseVal[0].matrix.a = 1;
+                ui.svg.main.group.transform.baseVal[0].matrix.d = 1;
+                ui.svg.main.group.transform.baseVal[0].matrix.e = 0;
+                ui.svg.main.group.transform.baseVal[0].matrix.f = 0;
+            }
             if( ui.svg.legend.group ) {
                 ui.svg.legend.group.transform.baseVal[0].matrix.a = 1;
                 ui.svg.legend.group.transform.baseVal[0].matrix.d = 1;
@@ -382,7 +382,7 @@ function PhasorViz()
                     ui.svg.main.offset.x = ui.svg.main.pos.x - ui.svg.main.group.transform.baseVal[0].matrix.e;
                     ui.svg.main.offset.y = ui.svg.main.pos.y - ui.svg.main.group.transform.baseVal[0].matrix.f;
                 }
-				ui.svg.main.clicktime = Date.now();
+                ui.svg.main.clicktime = Date.now();
             }
         }
     }
@@ -585,7 +585,7 @@ function PhasorViz()
     //      'click' event handler of #phasor_list
     function onPLClick( e )
     {
-		e.stopPropagation();
+        e.stopPropagation();
 
         if( ui.list.touch.done ) {
             return;
@@ -618,7 +618,7 @@ function PhasorViz()
                         break;
                     case 'exp':
                         ui.list.exp_el = $( e.target );
-						ui.list.exp_el.focus();
+                        ui.list.exp_el.focus();
                         break;
                 }
             }
@@ -677,30 +677,30 @@ function PhasorViz()
     //      'touchstart' event handler of #phasor_list
     function onPLTouchStart( e )
     {
-		e.stopPropagation();
+        e.stopPropagation();
         if( ui.list.direct_edit.active ) {
-			e.preventDefault();
+            e.preventDefault();
             return;
         }
         ui.list.touch.id = $( e.target ).closest( 'div.form-row' ).data( 'id' );
         ui.list.touch.done = false;
         ui.list.touch.timer = setTimeout( onPLTouchLong, constants.longtap_time );
-		ui.list.touch.target = -1;
-		let ident = e.target.getAttribute( 'data-ident' );
-		if( ident ) {
-			switch(ident)
-			{
-				case 'label':
-					ui.list.touch.target = UI.phasor.label;
-					break;
-				case 'parent':
-					ui.list.touch.target = UI.phasor.parent;
-					break;
-				case 'symbol':
-					ui.list.touch.target = UI.phasor.symbol;
-					break;
-			}
-		}
+        ui.list.touch.target = -1;
+        let ident = e.target.getAttribute( 'data-ident' );
+        if( ident ) {
+            switch(ident)
+            {
+                case 'label':
+                    ui.list.touch.target = UI.phasor.label;
+                    break;
+                case 'parent':
+                    ui.list.touch.target = UI.phasor.parent;
+                    break;
+                case 'symbol':
+                    ui.list.touch.target = UI.phasor.symbol;
+                    break;
+            }
+        }
     }
 
     // onPLTouchMove( event )
@@ -725,7 +725,7 @@ function PhasorViz()
     //      'touchend' event handler of #phasor_list
     function onPLTouchEnd()
     {
-		//e.preventDefault();
+        //e.preventDefault();
         if( ui.list.touch.timer ) {
             clearTimeout( ui.list.touch.timer );
         }
@@ -735,7 +735,7 @@ function PhasorViz()
                 if( ui.list.touch.target >= 0 && ui.list.touch.target <= 2) {
                     directPhasorEditStart( ui.list.touch.id, ui.list.touch.target );
                 }
-				ui.list.touch.done = true;
+                ui.list.touch.done = true;
             }
         }
         ui.list.touch.last = now;
@@ -771,7 +771,7 @@ function PhasorViz()
                 ui.svg.legend.group.getElementsByTagName('circle')[0].setAttribute( 'class', 'invisible' );
             }
         }
-		if( ui.list.direct_edit.active ) {
+        if( ui.list.direct_edit.active ) {
             // end direct edit if click outside of <input>
             if( e.target !== ui.list.direct_edit.input[0] ) {
                 directPhasorEditEnd( false );
@@ -868,7 +868,7 @@ function PhasorViz()
             case 'btn_lock':
             {
                 ui.locked = !ui.locked;
-				$( '#phasor_list' ).sortable( 'option', 'disabled', ui.locked );
+                $( '#phasor_list' ).sortable( 'option', 'disabled', ui.locked );
                 if( ui.locked ) {
                     $(e.target).removeClass( 'icon-lock-open' );
                     $(e.target).addClass( 'icon-lock' );
@@ -1079,11 +1079,11 @@ function PhasorViz()
         pl.on( 'touchcancel', onPLTouchCancel );
         pl.on( 'touchend', onPLTouchEnd );
         pl.on( 'input', onPLInput );
-		pl.sortable({
-			revert : true,
+        pl.sortable({
+            revert : true,
             disabled : true,
             update: onPLSortUpdate
-		});
+        });
 
         // #if APP
         if( document.getElementById('btn_del') ) {

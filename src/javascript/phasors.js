@@ -77,7 +77,7 @@ class Phasor {
         this.color = new Color(constants.phasor_colors[color_index]);
         this.outline_color = new Color(constants.phasor_colors[color_index]);
         this.expcode = null;
-		this.skin = 0;
+        this.skin = 0;
     }
 }
 
@@ -106,17 +106,17 @@ class Phasor {
 
 var phasors = (function ()
 {
-	const PLEnum = {
-		'position' : 0,
-		'label' : 1,
-		'color' : 2,
-		'symbol' : 3,
-		'parent' : 4,
-		'visible' : 5,
+    const PLEnum = {
+        'position' : 0,
+        'label' : 1,
+        'color' : 2,
+        'symbol' : 3,
+        'parent' : 4,
+        'visible' : 5,
         'nextsystem' : 6,
         'skin' : 7
-	};
-	Object.freeze( PLEnum );
+    };
+    Object.freeze( PLEnum );
 
     var phasors = new Map();                                        // main container
 
@@ -514,19 +514,19 @@ var phasors = (function ()
     function stringify()
     {
         var ret = '[';
-		// save phasors in current order
-		$( '#phasor_list' ).children().each(function(i) {
-			let el = $( this );
-			let p = phasors.get( el.data( 'id' ) );
-			if( typeof p !== 'undefined' ) {
+        // save phasors in current order
+        $( '#phasor_list' ).children().each(function(i) {
+            let el = $( this );
+            let p = phasors.get( el.data( 'id' ) );
+            if( typeof p !== 'undefined' ) {
                 let expression = JSON.stringify( el.find( 'input.phasor_exp' ).val() );
-				if(i > 0) {
-					ret += ',';
-				}
-				ret += '{ "id" : ' + p.id + ', "parent" : ' + (p.parent ? p.parent.id : -1) + ',  "value" : ' + expression + ', "width" : ' + p.width + ', "skin" : ' + p.skin + ', "arrow" : ' + p.arrow + ', "arrow_size" : ' + p.arrow_size + ', "visible" : ' + p.visible + ', "label" : ' + JSON.stringify(p.label) + ', "color_index" : ' + p.color_index + ', "color": "' + p.color.rgba + '", "outline_width" : ' + p.outline_width + ', "outline_color" : "' + p.outline_color.rgba + '", "symbol" : ' + JSON.stringify(p.symbol) + '}';
+                if(i > 0) {
+                    ret += ',';
+                }
+                ret += '{ "id" : ' + p.id + ', "parent" : ' + (p.parent ? p.parent.id : -1) + ',  "value" : ' + expression + ', "width" : ' + p.width + ', "skin" : ' + p.skin + ', "arrow" : ' + p.arrow + ', "arrow_size" : ' + p.arrow_size + ', "visible" : ' + p.visible + ', "label" : ' + JSON.stringify(p.label) + ', "color_index" : ' + p.color_index + ', "color": "' + p.color.rgba + '", "outline_width" : ' + p.outline_width + ', "outline_color" : "' + p.outline_color.rgba + '", "symbol" : ' + JSON.stringify(p.symbol) + '}';
                 i++;
             }
-		});
+        });
         ret += ']';
         return ret;
     }
@@ -1196,7 +1196,7 @@ var phasors = (function ()
         'isSelected' : isSelected,
         'getSelected' : getSelected,
         'isSelectionEmpty' : isSelectionEmpty,
-		'en' : PLEnum
+        'en' : PLEnum
     }
 }( html ));
 
@@ -1215,8 +1215,8 @@ var phasors = (function ()
 
 var html = (function ()
 {
-	const PLEnum = {
-		'btn' : {
+    const PLEnum = {
+        'btn' : {
             'del' : 0,
             'edit' : 1
         },
@@ -1249,7 +1249,7 @@ var html = (function ()
         jqel[0].appendChild( clone );
         let el = $( jqel[0].lastElementChild );
 
-		el.find( '.input-group' ).addClass( 'phasor_h' + cur.lineheight );
+        el.find( '.input-group' ).addClass( 'phasor_h' + cur.lineheight );
 
         update( p, html.en.u.label, el );
         update( p, html.en.u.expression, el );
@@ -1273,7 +1273,7 @@ var html = (function ()
     function removeAll()
     {
         jqel.empty();
-		cur.lineheight = -1;
+        cur.lineheight = -1;
     }
 
     // setSelected( phasor, value )
@@ -1411,12 +1411,12 @@ var html = (function ()
                 break;
             }
         }
-		if( lh !== cur.lineheight ) {
-			let ig = jqel.find( '.input-group' );
-			ig.removeClass( 'phasor_h' + cur.lineheight )
-			ig.addClass( 'phasor_h' + lh );
-			cur.lineheight = lh;
-		}
+        if( lh !== cur.lineheight ) {
+            let ig = jqel.find( '.input-group' );
+            ig.removeClass( 'phasor_h' + cur.lineheight )
+            ig.addClass( 'phasor_h' + lh );
+            cur.lineheight = lh;
+        }
     }
 
     // setInfo( p )
@@ -1466,6 +1466,6 @@ var html = (function ()
         'updatePhasor' : update,
         'updateLineHeight' : updateLineHeight,
         'setInfo' : setInfo,
-		'en' : PLEnum
+        'en' : PLEnum
     }
 }());

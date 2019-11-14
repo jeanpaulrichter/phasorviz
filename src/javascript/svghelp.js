@@ -182,31 +182,31 @@ var svgadd = function(node) {
         // --------- CIRCLE --------------------------------------------------------
         'circle' : function( x, y, radius, quadrant = 0 ) {
             var el;
-			if( quadrant <= 0 || quadrant > 4 ) {
-				el = document.createElementNS( constants.svg.ns, 'circle' );
-				el.setAttribute( 'cx', x );
-				el.setAttribute( 'cy', y );
-				el.setAttribute( 'r', radius );
-			} else {
-				el = document.createElementNS( constants.svg.ns, 'path' );
-				let s;
-				switch( quadrant )
-				{
-					case 1:
-						s = 'M ' + x + ' ' + (y - radius) + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + (x + radius) + ' ' + y;
-						break;
-					case 2:
-						s = 'M ' + (x - radius) + ' ' + y + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + x + ' ' + (y - radius);
-						break;
-					case 3:
-						s = 'M ' + (x - radius) + ' ' + y + ' A ' + radius + ' ' + radius + ' 0 0 0 ' + x + ' ' + (y + radius);
-						break;
-					case 4:
-						s = 'M ' + x + ' ' + (y + radius) + ' A ' + radius + ' ' + radius + ' 0 0 0 ' + (x + radius) + ' ' + y;
-						break;
-				}
-				el.setAttribute( 'd', s );
-			}
+            if( quadrant <= 0 || quadrant > 4 ) {
+                el = document.createElementNS( constants.svg.ns, 'circle' );
+                el.setAttribute( 'cx', x );
+                el.setAttribute( 'cy', y );
+                el.setAttribute( 'r', radius );
+            } else {
+                el = document.createElementNS( constants.svg.ns, 'path' );
+                let s;
+                switch( quadrant )
+                {
+                    case 1:
+                        s = 'M ' + x + ' ' + (y - radius) + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + (x + radius) + ' ' + y;
+                        break;
+                    case 2:
+                        s = 'M ' + (x - radius) + ' ' + y + ' A ' + radius + ' ' + radius + ' 0 0 1 ' + x + ' ' + (y - radius);
+                        break;
+                    case 3:
+                        s = 'M ' + (x - radius) + ' ' + y + ' A ' + radius + ' ' + radius + ' 0 0 0 ' + x + ' ' + (y + radius);
+                        break;
+                    case 4:
+                        s = 'M ' + x + ' ' + (y + radius) + ' A ' + radius + ' ' + radius + ' 0 0 0 ' + (x + radius) + ' ' + y;
+                        break;
+                }
+                el.setAttribute( 'd', s );
+            }
             el.setAttribute( 'vector-effect', 'non-scaling-stroke' );
             el.setAttribute( 'fill', 'none' );
             node.append( el );
