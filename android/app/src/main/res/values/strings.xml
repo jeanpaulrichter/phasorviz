@@ -23,4 +23,6 @@
     <string name="ui_fileisdirectory">Please choose a file</string>
     <string name="ui_filesaved">Saved under Download/phasorviz</string>
     <string name="ui_filesavefailed">Failed to save file</string>
+    <string name="ui_discardphasors">Discard current phasors?</string>
+    <string name="ui_warning">Warning</string>
 </resources>

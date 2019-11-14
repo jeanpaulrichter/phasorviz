@@ -21,26 +21,28 @@ import androidx.core.content.ContextCompat;
 
 public class JSInterface
 {
-    private Context mContext;
-    private Handler mCallback;
+    private Context _context;
+    private Handler _ui;
     private static final String TAG = "PhasorViz:JSInterface";
 
     JSInterface(Context c, Handler callback)
     {
-        mContext = c;
-        mCallback = callback;
+        _context = c;
+        _ui = callback;
     }
 
     @android.webkit.JavascriptInterface
     public void showToast(String s)
     {
-        Toast.makeText(mContext, s, Toast.LENGTH_SHORT).show();
+        if( s.length() < 128 ) {
+            Toast.makeText(_context, s, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @android.webkit.JavascriptInterface
     public void enableButtons(boolean v)
     {
-        mCallback.sendEmptyMessage(v ? 0 : 1);
+        _ui.sendEmptyMessage(v ? UICallbackHandler.ENABLE_DELEDIT : UICallbackHandler.DISABLE_DELEDIT);
     }
 
     @android.webkit.JavascriptInterface
@@ -56,7 +58,7 @@ public class JSInterface
     @android.webkit.JavascriptInterface
     public int getVersion() {
         try {
-            PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+            PackageInfo pInfo = _context.getPackageManager().getPackageInfo(_context.getPackageName(), 0);
             return pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e.getMessage());
@@ -71,15 +73,15 @@ public class JSInterface
         File file = null;
         try {
             if (!Environment.MEDIA_MOUNTED.equals(state)) {
-                throw new PVException(mContext.getString(R.string.ui_noextstorageaccess));
+                throw new PVException(_context.getString(R.string.ui_noextstorageaccess));
             }
             file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "phasorviz/" + filename);
 
             if(file.exists()) {
-                throw new PVException(mContext.getString(R.string.ui_filealreadyexists));
+                throw new PVException(_context.getString(R.string.ui_filealreadyexists));
             }
             if(file.isDirectory()) {
-                throw new PVException(mContext.getString(R.string.ui_fileisdirectory));
+                throw new PVException(_context.getString(R.string.ui_fileisdirectory));
             }
             file.createNewFile();
 
@@ -95,12 +97,12 @@ public class JSInterface
                 output.close();
             }
             Log.i(TAG, file.toString() + " saved");
-            Toast.makeText(mContext, mContext.getString(R.string.ui_filesaved), Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, _context.getString(R.string.ui_filesaved), Toast.LENGTH_SHORT).show();
         } catch(PVException exc) {
-            Toast.makeText(mContext, exc.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, exc.getMessage(), Toast.LENGTH_SHORT).show();
         } catch(Exception exc) {
             Log.e(TAG, "Failed to write " + file.toString() + ", " + exc.getMessage());
-            Toast.makeText(mContext, mContext.getString(R.string.ui_filesavefailed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, _context.getString(R.string.ui_filesavefailed), Toast.LENGTH_SHORT).show();
         }
     }
 }
