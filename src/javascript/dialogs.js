@@ -562,7 +562,7 @@ var dialogs = (function ()
     function _dlgLoadCallback( ret )
     {
         if( ret.success ) {
-            updateSVG( true, true );
+            updateSVG( ret.transform.main, ret.transform.legend );
             current = DlgEnum.none;
             $( '#dlgload' ).modal( 'hide' );
         } else {
@@ -617,7 +617,7 @@ var dialogs = (function ()
         let el_btn = el.find( '#dlgupload_btn' );
         let el_title = el.find( '.modal-title' );
 
-        var data = '{ "settings" : ' + JSON.stringify(settings) + ', "phasors" : ' + phasors.stringify() + '}';
+        var data = files.getSaveString();
         var device, version, language;
         if( constants.appmode ) {
             device = APP.getDeviceString();

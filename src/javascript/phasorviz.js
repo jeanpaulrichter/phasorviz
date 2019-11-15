@@ -121,44 +121,62 @@ function PhasorViz()
     // -----------------------------------------------------------------------------------------------------------------------------
 
     // updateSVG():
-    //      update SVG but keep current transformations (legend, pan, zoom)
-    function updateSVG( reset_main, reset_legend )
+    //      updates SVG with current phasor data. Can be called in two ways:
+    //      updateSVG( boolean : resetmain, boolean : resetlegend )
+    //          resetmain & resetlegend define if current transformations should be kept.
+    //      updateSVG( object : main, object legend )
+    //          main & legend define the transformations which should be applied ( used i.e. when loading files )
+    function updateSVG( main = false , legend = false )
     {
-        let gotm = false, gotl = false;
-        let ma, md, me, mf;
-        let la, ld, le, lf;
-        if( ui.svg.main.group !== null ) {
-            ma = ui.svg.main.group.transform.baseVal[0].matrix.a;
-            md = ui.svg.main.group.transform.baseVal[0].matrix.d;
-            me = ui.svg.main.group.transform.baseVal[0].matrix.e;
-            mf = ui.svg.main.group.transform.baseVal[0].matrix.f;
-            gotm = true;
-        }
-        if( ui.svg.legend.group !== null ) {
-            la = ui.svg.legend.group.transform.baseVal[0].matrix.a;
-            ld = ui.svg.legend.group.transform.baseVal[0].matrix.d;
-            le = ui.svg.legend.group.transform.baseVal[0].matrix.e;
-            lf = ui.svg.legend.group.transform.baseVal[0].matrix.f;
-            gotl = true;
-        }
-        svg.update();
-        ui.svg.main.group = document.getElementById( 'svg_main' );
-        ui.svg.legend.group = document.getElementById( 'svg_legend' );
-        if( gotm && ui.svg.main.group !== null && !reset_main ) {
-            ui.svg.main.group.transform.baseVal[0].matrix.a = ma;
-            ui.svg.main.group.transform.baseVal[0].matrix.d = md;
-            ui.svg.main.group.transform.baseVal[0].matrix.e = me;
-            ui.svg.main.group.transform.baseVal[0].matrix.f = mf;
-        }
-        if( ui.svg.legend.group !== null ) {
-            ui.svg.legend.init.e = ui.svg.legend.group.transform.baseVal[0].matrix.e;
-            ui.svg.legend.init.f = ui.svg.legend.group.transform.baseVal[0].matrix.f;
-            if( gotl && !reset_legend ) {
-                ui.svg.legend.group.transform.baseVal[0].matrix.a = la;
-                ui.svg.legend.group.transform.baseVal[0].matrix.d = ld;
-                ui.svg.legend.group.transform.baseVal[0].matrix.e = le;
-                ui.svg.legend.group.transform.baseVal[0].matrix.f = lf;
+        if( typeof main === 'boolean') {
+            let gotm = false, gotl = false;
+            let ma, md, me, mf;
+            let la, ld, le, lf;
+            if( ui.svg.main.group !== null ) {
+                ma = ui.svg.main.group.transform.baseVal[0].matrix.a;
+                md = ui.svg.main.group.transform.baseVal[0].matrix.d;
+                me = ui.svg.main.group.transform.baseVal[0].matrix.e;
+                mf = ui.svg.main.group.transform.baseVal[0].matrix.f;
+                gotm = true;
             }
+            if( ui.svg.legend.group !== null ) {
+                la = ui.svg.legend.group.transform.baseVal[0].matrix.a;
+                ld = ui.svg.legend.group.transform.baseVal[0].matrix.d;
+                le = ui.svg.legend.group.transform.baseVal[0].matrix.e;
+                lf = ui.svg.legend.group.transform.baseVal[0].matrix.f;
+                gotl = true;
+            }
+            svg.update();
+            ui.svg.main.group = document.getElementById( 'svg_main' );
+            ui.svg.legend.group = document.getElementById( 'svg_legend' );
+            if( gotm && ui.svg.main.group !== null && !main ) {
+                ui.svg.main.group.transform.baseVal[0].matrix.a = ma;
+                ui.svg.main.group.transform.baseVal[0].matrix.d = md;
+                ui.svg.main.group.transform.baseVal[0].matrix.e = me;
+                ui.svg.main.group.transform.baseVal[0].matrix.f = mf;
+            }
+            if( ui.svg.legend.group !== null ) {
+                ui.svg.legend.init.e = ui.svg.legend.group.transform.baseVal[0].matrix.e;
+                ui.svg.legend.init.f = ui.svg.legend.group.transform.baseVal[0].matrix.f;
+                if( gotl && !legend ) {
+                    ui.svg.legend.group.transform.baseVal[0].matrix.a = la;
+                    ui.svg.legend.group.transform.baseVal[0].matrix.d = ld;
+                    ui.svg.legend.group.transform.baseVal[0].matrix.e = le;
+                    ui.svg.legend.group.transform.baseVal[0].matrix.f = lf;
+                }
+            }
+        } else {
+            svg.update();
+            ui.svg.main.group = document.getElementById( 'svg_main' );
+            ui.svg.legend.group = document.getElementById( 'svg_legend' );
+            ui.svg.main.group.transform.baseVal[0].matrix.a = main.a;
+            ui.svg.main.group.transform.baseVal[0].matrix.d = main.d;
+            ui.svg.main.group.transform.baseVal[0].matrix.e = main.e;
+            ui.svg.main.group.transform.baseVal[0].matrix.f = main.f;
+            ui.svg.legend.group.transform.baseVal[0].matrix.a = legend.a;
+            ui.svg.legend.group.transform.baseVal[0].matrix.d = legend.d;
+            ui.svg.legend.group.transform.baseVal[0].matrix.e = legend.e;
+            ui.svg.legend.group.transform.baseVal[0].matrix.f = legend.f;
         }
     }
 
@@ -950,8 +968,10 @@ function PhasorViz()
 
     function exportLoad( s )
     {
-        files.loadString( s );
-        updateSVG( true, true );
+        let transform = files.loadString( s );
+        if( transform ) {
+            updateSVG( transform.main, transform.legend );
+        }
     }
 
     function exportDlgEdit()
@@ -989,7 +1009,7 @@ function PhasorViz()
                     if( o.success ) {
                         if( Settings.check( o.data.settings ) && phasors.load( o.data.phasors )) {
                             settings.load( o.data.settings );
-                            updateSVG( true, true );
+                            updateSVG( o.data.transform.main, o.data.transform.legend );
                         } else {
                             APP.showToast( 'Invalid data' );
                             exportInit();
@@ -1139,7 +1159,7 @@ function PhasorViz()
                     if( o.success ) {
                         if( Settings.check( o.data.settings ) && phasors.load( o.data.phasors )) {
                             settings.load( o.data.settings );
-                            updateSVG();
+                            updateSVG( o.data.transform.main, o.data.transform.legend );
                         } else {
                             phasors.add(1, 1);
                             updateSVG();

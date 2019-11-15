@@ -53,6 +53,20 @@ var files = (function ()
         return (new XMLSerializer()).serializeToString( svgDoc );
     }
 
+    // getSaveString()
+    //      returns string to save current state
+    function getSaveString()
+    {
+        let emain = document.getElementById( 'svg_main' );
+        let elegend = document.getElementById( 'svg_legend' );
+
+        return '{ "settings" : ' + JSON.stringify(settings) + ', "phasors" : ' + phasors.stringify() + ', "transform" : { "main" : { ' +
+                   '"a" : ' + emain.transform.baseVal[0].matrix.a + ', "d" : ' + emain.transform.baseVal[0].matrix.d +
+                   ', "e" : ' + emain.transform.baseVal[0].matrix.e + ', "f" : ' + emain.transform.baseVal[0].matrix.f + ' }, "legend" : { ' +
+                   '"a" : ' + elegend.transform.baseVal[0].matrix.a + ', "d" : ' + elegend.transform.baseVal[0].matrix.d +
+                   ', "e" : ' + elegend.transform.baseVal[0].matrix.e + ', "f" : ' + elegend.transform.baseVal[0].matrix.f + ' } } }';
+    }
+
     // savePNG( filename, width, height, color )
     //      renders current svg in canvas and prepares .png download of result
     function savePNG( filename, width, height, color )
@@ -97,7 +111,7 @@ var files = (function ()
     //      prepares download of phasorviz .json file
     function saveJSON( filename )
     {
-        let data = '{ "settings" : ' + JSON.stringify(settings) + ', "phasors" : ' + phasors.stringify() + '}';
+        let data = getSaveString();
         if( constants.appmode ) {
             APP.saveFile( filename, data );
         } else {
@@ -117,7 +131,7 @@ var files = (function ()
 
                 if( Settings.check( data.settings ) && phasors.load( data.phasors )) {
                     settings.load( data.settings );
-                    func( { 'success' : true, 'msg' : '' } );
+                    func( { 'success' : true, 'transform' : data.transform } );
                 } else {
                     func( { 'success' : false, 'msg' : 'failed to parse phasorviz data.' } );
                 }
@@ -132,28 +146,26 @@ var files = (function ()
     }
 
     // loadJSONString( str, func )
-    //      trys to load .json string, calls func with { 'success' : true/false , 'msg' : errormsg }
-    function loadString( str, func )
+    //      trys to load .json string, returns null or transform object
+    function loadString( str )
     {
         try {
             let data = JSON.parse( str );
 
             if( Settings.check( data.settings ) && phasors.load( data.phasors )) {
                 settings.load( data.settings );
+                return data.transform;
             } else {
                 if( constants.appmode ) {
                     APP.showToast( 'Invalid file' );
-                } else {
-                    func( { 'success' : false, 'msg' : 'Invalid file' } );
                 }
             }
         } catch(exc) {
             if( constants.appmode ) {
-                APP.showToast( 'Failed to parse json' );
-            } else {
-                func( { 'success' : false, 'msg' : 'Failed to parse json' } );
+                APP.showToast( 'Failed to parse JSON' );
             }
         }
+        return null;
     }
 
     return {
@@ -161,6 +173,7 @@ var files = (function ()
         'saveSVG' : saveSVG,
         'saveJSON' : saveJSON,
         'load' : load,
-        'loadString' : loadString
+        'loadString' : loadString,
+        'getSaveString' : getSaveString
     };
 }());
