@@ -848,9 +848,9 @@ var svg = (function ()
 
         // create main group
         let g = document.createElementNS( constants.svg.ns, 'g' );
+        _createCompass( g );
         _createCarteseanGrid( g );
         _createAxis( g );
-        _createCompass( g );
         _createUnitLabels( g );
         _createPhasors( g );
         g.setAttribute( 'id', 'svg_main' );
