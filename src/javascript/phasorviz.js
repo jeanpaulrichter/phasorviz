@@ -682,6 +682,11 @@ function PhasorViz()
             e.preventDefault();
             return;
         }
+
+        // #if APP
+        ui.buttons.dropdown_el.dropdown( 'hide' );
+        // #endif
+
         ui.list.touch.id = $( e.target ).closest( 'div.form-row' ).data( 'id' );
         ui.list.touch.done = false;
         ui.list.touch.timer = setTimeout( onPLTouchLong, constants.longtap_time );
