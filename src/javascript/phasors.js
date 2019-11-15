@@ -592,7 +592,7 @@ var phasors = (function ()
                     if( p_ind == list.length ) {
                         throw new Error('parent not found');
                     }
-                    list[i].parent = list[array[i].parent];
+                    list[i].parent = list[p_ind];
                 }
                 // check symbols
                 if( list[i].symbol.length > 0 ) {
