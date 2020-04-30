@@ -17,7 +17,7 @@
         "bootstrap": "^4.3.1",
         "bootstrap-colorpicker": "^3.1.2",
         "file-saver": "^2.0.2",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "mathjs": "^6.2.3",
         "popper.js": "^1.16.0"
     },
