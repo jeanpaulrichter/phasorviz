@@ -17,7 +17,7 @@ var files = {
             './src/javascript/thirdparty/jquery.mousewheel.min.js',
             './src/javascript/thirdparty/jquery-ui.min.js',
             './src/javascript/thirdparty/jquery.ui.touch-punch.js',
-            './node_modules/mathjs/dist/math.min.js',
+            './node_modules/mathjs/lib/browser/math.js',
             './node_modules/popper.js/dist/umd/popper.min.js',
             './node_modules/bootstrap/dist/js/bootstrap.min.js',
             './node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
