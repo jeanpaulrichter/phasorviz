@@ -14,9 +14,10 @@
     "license": "GPL-3.0+",
     "repository": "github:jeanpaulrichter/phasorviz",
     "dependencies": {
-        "bootstrap": "^4.3.1",
+        "bootstrap": "^5.3.3",
         "bootstrap-colorpicker": "^3.1.2",
         "file-saver": "^2.0.2",
+        "html-minifier-terser": "^7.2.0",
         "jquery": "^3.4.1",
         "mathjs": "^10.6.4",
         "popper.js": "^1.16.0"
@@ -24,10 +25,9 @@
     "devDependencies": {
         "copyfiles": "^2.1.1",
         "eslint": "^6.6.0",
-        "html-minifier": "^4.0.0",
         "replace-in-file": "^4.2.0",
-        "rollup": "^1.26.3",
-        "rollup-plugin-babel-minify": "^9.1.0",
+        "rollup": "^4.32.1",
+        "rollup-plugin-babel-minify": "^10.0.0",
         "rollup-plugin-delete": "^1.1.0",
         "rollup-plugin-re": "^1.0.7",
         "uglifycss": "0.0.29"

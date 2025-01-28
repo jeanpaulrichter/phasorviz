@@ -7,7 +7,7 @@ var mkdirp = require('mkdirp');
 const path = require('path');
 var uglifycss = require('uglifycss');
 const rollup = require('rollup');
-var minify = require('html-minifier').minify;
+const { minify } = require('html-minifier-terser');
 
 var files = {
     'web' : {
@@ -119,18 +119,19 @@ function uglifyWebHtml()
 
         fs.readFile( index_path, 'utf8', (err, data) => {
             if(!err) {
-                var minifyed_html = minify(data, {
+                minify(data, {
                     removeAttributeQuotes: true,
                     collapseWhitespace: true,
                     preserveLineBreaks: false,
                     removeComments: true,
-                });
-                fs.writeFile( index_path, minifyed_html, function(err) {
-                    if(err) {
-                        console.error( 'failed to write minifyed html (web)');
-                    } else {
-                        console.log( 'created web/index.html');
-                    }
+                }).then(minifyed_html => {
+                    fs.writeFile( index_path, minifyed_html, function(err) {
+                        if(err) {
+                            console.error( 'failed to write minifyed html (web)');
+                        } else {
+                            console.log( 'created web/index.html');
+                        }
+                    });
                 });
             } else {
                 console.error( 'failed to read web/index.html' );
@@ -181,18 +182,19 @@ function uglifyAppHtml()
 
         fs.readFile( index_path, 'utf8', (err, data) => {
             if(!err) {
-                var minifyed_html = minify(data, {
+                minify(data, {
                     removeAttributeQuotes: true,
                     collapseWhitespace: true,
                     preserveLineBreaks: false,
                     removeComments: true,
-                });
-                fs.writeFile( index_path, minifyed_html, function(err) {
-                    if(err) {
-                        console.error( 'failed to write minifyed html (app)');
-                    } else {
-                        console.log( 'created android/app/src/main/assets/www/index.html');
-                    }
+                }).then(minifyed_html => {
+                    fs.writeFile( index_path, minifyed_html, function(err) {
+                        if(err) {
+                            console.error( 'failed to write minifyed html (app)');
+                        } else {
+                            console.log( 'created android/app/src/main/assets/www/index.html');
+                        }
+                    });
                 });
             } else {
                 console.error( 'failed to read android/app/src/main/assets/www/index.html' );
